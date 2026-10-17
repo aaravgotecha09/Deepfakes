@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deepfake Network Lab | Future Security Networks</title>
+<meta name="description" content="Interactive model: how deepfakes relate to computer networks, with live simulations of RTP/UDP calls, payment fraud in rupees, provenance signing and zero trust.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='44' fill='%23202C3A'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%23BF765D'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#F6F3EC;--ink:#202C3A;--tx:#353A3D;--sage:#879783;--terra:#BF765D;--stone:#DCD8CE;--card:#EFEBE1;--btn:#202C3A;--btnt:#F6F3EC}
+@media (prefers-color-scheme:dark){:root{--bg:#141C26;--ink:#F6F3EC;--tx:#DCD8CE;--card:#1E2936;--stone:#3A4654;--btn:#F6F3EC;--btnt:#202C3A}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 Calibri,"Segoe UI",Arial,sans-serif}
+header{padding:28px 18px 8px;max-width:1040px;margin:0 auto}
+.k{font-size:12px;letter-spacing:.14em;font-weight:700}
+h1{color:var(--ink);font-size:clamp(26px,5vw,40px);line-height:1.15;margin:6px 0}
+h2{color:var(--ink);font-size:22px;margin:0 0 6px}h3{color:var(--ink);font-size:17px;margin:14px 0 4px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--stone);overflow-x:auto;white-space:nowrap}
+nav .in{max-width:1040px;margin:0 auto;padding:6px 18px;display:flex;gap:6px}
+nav button{background:none;color:var(--tx);border:1px solid transparent;padding:8px 12px;font:inherit;cursor:pointer}
+nav button.on{border-color:var(--ink);color:var(--ink);font-weight:700}
+main{max-width:1040px;margin:0 auto;padding:20px 18px 40px}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--card);border:1px solid var(--stone);padding:18px;margin:0 0 18px}
+.row{display:flex;flex-wrap:wrap;gap:18px}.col{flex:1 1 290px}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+label{display:block;font-size:14px;margin:8px 0 2px}input[type=range]{width:100%}
+.chk{display:block;margin:7px 0;font-size:15px}.chk input{margin-right:8px}
+button.b{font:inherit;padding:9px 16px;border:1px solid var(--btn);background:var(--btn);color:var(--btnt);cursor:pointer;margin:4px 6px 4px 0}
+button.b.alt{background:none;color:var(--ink)}
+textarea,input[type=text],input[type=number],select{font:inherit;width:100%;padding:8px;background:var(--bg);color:var(--ink);border:1px solid var(--stone)}
+input[type=number]{width:80px}
+.pipe{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.nd{border:1px solid var(--ink);padding:6px 9px;font-size:13px;color:var(--ink);background:var(--bg)}
+.nd.ai{background:var(--terra);border-color:var(--terra);color:#202C3A;font-weight:700}.nd.off{opacity:.35}
+.track{position:relative;height:46px;border-top:2px solid var(--sage);border-bottom:2px solid var(--sage);overflow:hidden;margin:10px 0;background:var(--bg)}
+.dot{position:absolute;top:18px;width:10px;height:10px;border-radius:50%;background:var(--ink)}
+.dot.fake{background:var(--terra)}.dot.lost{background:#c0392b}
+.m{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:10px 0}
+.m div{background:var(--bg);border:1px solid var(--stone);padding:8px;font-size:13px}.m b{display:block;font-size:20px;color:var(--ink)}
+.v{padding:12px;border:1.5px solid var(--terra);color:var(--ink);font-weight:700;background:var(--bg)}
+.log div{padding:5px 8px;border-bottom:1px solid var(--stone);font-size:14px}.log .bad{color:var(--terra);font-weight:700}.log .ok{color:var(--sage);font-weight:700}
+.big{font-size:30px;color:var(--terra);font-weight:700}
+.layer{display:grid;grid-template-columns:130px 1fr;gap:8px;margin:6px 0}
+.layer button{text-align:left;border:1px solid var(--ink);background:var(--bg);color:var(--ink);padding:12px;font:inherit;cursor:pointer;font-weight:700}
+.layer button.on{background:var(--sage);color:#202C3A}
+.pill{display:inline-block;padding:2px 8px;border:1px solid var(--terra);color:var(--ink);font-size:13px;margin:2px}
+code{background:var(--bg);padding:1px 5px;word-break:break-all;font-size:13px}
+.res{padding:10px;border:1.5px solid var(--sage);margin-top:8px;color:var(--ink);font-weight:700}.res.bad{border-color:var(--terra)}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--stone);padding:6px 8px;text-align:left;vertical-align:top}th{color:var(--ink)}
+ol.ref{padding-left:22px;font-size:13px}ol.ref li{margin:4px 0}
+footer{max-width:1040px;margin:0 auto;padding:10px 18px 30px;font-size:12px}
+</style></head><body>
+<header><div class="k">COMPUTER NETWORKS | INTERACTIVE MODEL</div>
+<h1>Deepfake Network Lab</h1>
+<div>Future Security Networks: Deepfakes, Network Vulnerabilities, and Defense</div></header>
+<nav><div class="in" id="nav"></div></nav>
+<main>
+
+<div class="tab on" id="t-about" data-t="About">
+<div class="card"><h2>What this app is</h2>
+<p>A set of live simulations that show one idea from our Computer Networks project: <b>a network can carry a deepfake perfectly, so network health cannot prove a video is real.</b> Trust has to be added on top, through process controls, cryptographic provenance and zero-trust design.</p>
+<p>Everything runs in your browser. There is no server, no tracking and no external library.</p></div>
+<div class="g3">
+<div class="card"><h3>1. Network lab</h3>Move packet loss, jitter and latency on a live RTP/UDP call. See that a fake on a perfect network looks healthy, and a real video on a bad network looks glitchy.</div>
+<div class="card"><h3>2. Fraud replay (₹)</h3>Replay the Arup deepfake fraud, or a hypothetical Mumbai case, in rupees. Switch controls on and see what breaks the chain.</div>
+<div class="card"><h3>3. Layer explorer</h3>Click each TCP/IP layer to see where deepfakes interact, which defenses apply, and the common myth.</div>
+<div class="card"><h3>4. Provenance</h3>Real digital signing (ECDSA P-256) in your browser. Sign a caption, alter one character, and watch verification fail.</div>
+<div class="card"><h3>5. Zero trust</h3>Toggle identity, device and provenance signals and see the access decision. Network location is ignored.</div>
+<div class="card"><h3>6. References</h3>The sources behind the project, with the same numbering as our slides.</div></div>
+<div class="card"><h2>Key points to remember</h2>
+<table><tr><th>Statement</th><th>Why</th></tr>
+<tr><td>A network carrying a deepfake is not compromised.</td><td>Packets are delivered normally; the attack is on trust.</td></tr>
+<tr><td>HTTPS/TLS does not prove media is authentic.</td><td>It protects the channel, not the content.</td></tr>
+<tr><td>Network anomalies cannot prove a video is fake.</td><td>Compression, loss concealment and rendering cause glitches too.</td></tr>
+<tr><td>A valid signature does not prove the events are true.</td><td>It proves a key signed the file, not the honesty of the holder.</td></tr>
+<tr><td>Broad cybercrime totals are not deepfake losses.</td><td>FBI totals cover all internet crime or all AI-referencing complaints.</td></tr></table></div>
+<div class="card"><h2>Honest limits of this model</h2>
+<p>These are simplified simulations built to teach a concept, not real network traffic or a real detector. The Arup figures come from CNN reporting (HK$200 million, about US$25.6 million, 15 transactions). Rupee amounts are converted at an approximate, editable exchange rate. The Mumbai scenario is hypothetical.</p></div>
+</div>
+
+<div class="tab" id="t-net" data-t="1. Network lab">
+<div class="card"><h2>A live video call over RTP/UDP</h2>
+<div class="pipe" id="pipe"></div>
+<div class="row"><div class="col">
+<label class="chk"><input type="checkbox" id="fake" checked> Deepfake AI stage inserted at the sender</label>
+<label>Packet loss: <b id="lv">0</b>%</label><input type="range" id="loss" min="0" max="25" value="0">
+<label>Jitter: <b id="jv">10</b> ms</label><input type="range" id="jit" min="0" max="150" value="10">
+<label>Latency: <b id="tv">40</b> ms</label><input type="range" id="lat" min="10" max="400" value="40">
+<p><button class="b alt" id="p1">Preset: fake, perfect network</button><button class="b alt" id="p2">Preset: real, bad network</button></p>
+</div><div class="col">
+<div class="m"><div>Sent<b id="ms">0</b></div><div>Received<b id="mr">0</b></div><div>Measured loss<b id="ml">0%</b></div><div>Network quality<b id="mq">Healthy</b></div></div>
+<div class="v" id="verdict"></div></div></div>
+<div class="track" id="track"></div>
+<small>Dark dots: real-video packets. Terracotta: deepfake packets. Red: lost in the network. The protocol behaviour is identical.</small></div>
+</div>
+
+<div class="tab" id="t-fraud" data-t="2. Fraud replay (₹)">
+<div class="card"><h2>Replay a deepfake payment fraud</h2>
+<p>No packet is intercepted or injected. Pick a scenario and the controls the company has, then run the attack.</p>
+<div class="row"><div class="col">
+<label>Scenario <select id="sc"><option value="arup">Arup, Hong Kong, Jan 2024 (real case, shown in ₹)</option><option value="in">Mumbai company (hypothetical, RTGS transfers)</option></select></label>
+<label>Exchange rate: ₹ <input type="number" id="rate" value="86" min="50" max="150"> per US$ (approximate; edit to today’s rate)</label>
+<label class="chk"><input type="checkbox" id="c1"> Out-of-band call-back on a known number</label>
+<label class="chk"><input type="checkbox" id="c2"> Dual authorization (approver not on the call)</label>
+<label class="chk"><input type="checkbox" id="c3"> Transaction limit (₹50 lakh per transfer)</label>
+<label class="chk"><input type="checkbox" id="c4"> Policy: video alone is never enough (identity check required)</label>
+<p><button class="b" id="run">Run attack</button><button class="b alt" id="clr">Reset</button></p>
+<div>Loss: <span class="big" id="loss2">₹0</span><div id="usd"></div></div>
+</div><div class="col log" id="log"></div></div></div>
+</div>
+
+<div class="tab" id="t-layers" data-t="3. Layer explorer">
+<div class="card"><h2>Where deepfakes sit in the network stack</h2><p>Click a layer.</p>
+<div class="row"><div class="col" style="flex:0 0 190px" id="lbtn"></div><div class="col" id="linfo"></div></div></div>
+</div>
+
+<div class="tab" id="t-prov" data-t="4. Provenance">
+<div class="card"><h2>Sign media, then try to tamper with it</h2>
+<p>Uses your browser’s real Web Crypto API (ECDSA P-256, SHA-256). This is the same idea as C2PA Content Credentials: a signed manifest bound to the media.</p>
+<label>1. Caption of the original media (the content being signed)</label><textarea id="cap" rows="2">CFO approves transfer of Rs 1.5 crore to vendor account.</textarea>
+<p><button class="b" id="sign">Generate key and sign</button></p>
+<div id="sigout"></div>
+<label>2. Received version (edit it to simulate tampering)</label><textarea id="recv" rows="2"></textarea>
+<p><button class="b" id="verify">Verify signature</button><button class="b alt" id="lie">Sign a false caption instead</button></p>
+<div id="vres"></div></div>
+<div class="card"><b>What to notice:</b> change even one character and verification fails. But “Sign a false caption” shows a valid signature on a lie: a signature proves which key signed, not that the content is true. Missing provenance means unknown, not fake.</div>
+</div>
+
+<div class="tab" id="t-zt" data-t="5. Zero trust">
+<div class="card"><h2>Evaluate an access request</h2>
+<p>A policy decision point weighs signals for each request. Where the request comes from on the network does not count.</p>
+<div class="row"><div class="col">
+<label class="chk"><input type="checkbox" id="z1" checked> Request comes from inside the office network</label>
+<label class="chk"><input type="checkbox" id="z2"> Identity verified with phishing-resistant MFA</label>
+<label class="chk"><input type="checkbox" id="z3"> Device attested (secure boot, managed)</label>
+<label class="chk"><input type="checkbox" id="z4"> Media or instruction carries valid provenance</label>
+<label class="chk"><input type="checkbox" id="z5"> High-risk action (payment approval)</label></div>
+<div class="col"><div class="m"><div>Decision<b id="zd">-</b></div></div><div class="v" id="zr"></div></div></div></div>
+</div>
+
+<div class="tab" id="t-ref" data-t="6. References">
+<div class="card"><h2>References</h2><ol class="ref">
+<li>I. J. Goodfellow et al., “Generative adversarial nets,” NIPS vol. 27, 2014. arXiv:1406.2661</li>
+<li>J. Ho, A. Jain, P. Abbeel, “Denoising diffusion probabilistic models,” NeurIPS vol. 33, 2020. arXiv:2006.11239</li>
+<li>A. Rossler et al., “FaceForensics++,” Proc. IEEE/CVF ICCV, 2019. arXiv:1901.08971</li>
+<li>L. Verdoliva, “Media forensics and DeepFakes: An overview,” IEEE JSTSP 14(5), 2020.</li>
+<li>U. A. Ciftci, I. Demir, L. Yin, “FakeCatcher,” IEEE TPAMI, 2020. arXiv:1901.02212</li>
+<li>J. Frank et al., “Leveraging frequency analysis for deep fake image recognition,” ICML, PMLR 119, 2020.</li>
+<li>N. A. Chandra et al., “Deepfake-Eval-2024,” arXiv preprint, Mar. 2025. arXiv:2503.02857</li>
+<li>H. Schulzrinne et al., “RTP: A transport protocol for real-time applications,” RFC 3550, 2003.</li>
+<li>E. Rescorla, “The TLS protocol version 1.3,” RFC 8446, 2018.</li>
+<li>S. Rose et al., “Zero trust architecture,” NIST SP 800-207, 2020.</li>
+<li>B. Chandra et al., “Reducing risks posed by synthetic content,” NIST AI 100-4, 2024.</li>
+<li>Coalition for Content Provenance and Authenticity, “C2PA technical specification,” v2.3, 2026.</li>
+<li>FinCEN, “Alert on fraud schemes involving deepfake media,” FIN-2024-Alert004, Nov. 13, 2024.</li>
+<li>FBI Internet Crime Complaint Center, “2025 Internet Crime Report,” 2026.</li>
+<li>H. Chen and K. Magramo, “Finance worker pays out $25 million after video call with deepfake ‘chief financial officer’,” CNN, Feb. 4, 2024.</li>
+<li>K. Magramo, “British engineering giant Arup revealed as $25 million deepfake scam victim,” CNN, May 16, 2024.</li>
+<li>D. Elliott, “‘This happens more frequently than people realize’,” World Economic Forum, Feb. 4, 2025.</li>
+<li>R. Chesney, D. K. Citron, “Deep fakes: A looming challenge for privacy, democracy, and national security,” California Law Review 107, 1753, 2019.</li></ol></div>
+</div>
+</main>
+<footer>Presented by Ashima Bhattacharjee (I010) and Aarav Gotecha (I019) | Computer Networks | SVKM’s NMIMS Mukesh Patel School of Technology Management &amp; Engineering, Mumbai</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+/* tabs */
+const tabs=[...document.querySelectorAll(".tab")];
+tabs.forEach((t,i)=>{const b=document.createElement("button");b.textContent=t.dataset.t;b.onclick=()=>show(i);$("nav").appendChild(b);});
+function show(i){tabs.forEach((t,j)=>t.classList.toggle("on",i==j));[...$("nav").children].forEach((b,j)=>b.classList.toggle("on",i==j));scrollTo(0,0);}
+show(0);
+/* 1 network lab */
+const stages=["Camera + mic","AI media stage","Encoder","RTP over UDP","IP network","Jitter buffer + decoder","Audio / video out"];
+function verdict(){
+  const L=+$("loss").value,J=+$("jit").value,T=+$("lat").value,f=$("fake").checked;
+  $("lv").textContent=L;$("jv").textContent=J;$("tv").textContent=T;
+  const ok=L<3&&J<40&&T<150;$("mq").textContent=ok?"Healthy":"Degraded";
+  $("verdict").textContent=f&&ok?"Metrics look perfect, yet this video is fake. The network cannot tell.":
+   f?"Glitches could come from the network or the AI model. Inconclusive.":
+   ok?"Real video over a healthy network. Nothing unusual.":"Real video, but it looks glitchy. Network anomalies would wrongly suggest a fake.";
+  $("pipe").innerHTML=stages.map((s,i)=>'<span class="nd'+(i==1?' ai'+(f?'':' off'):'')+'">'+s+'</span>'+(i<6?'→':'')).join("");
+}
+["fake","loss","jit","lat"].forEach(i=>$(i).addEventListener("input",verdict));
+$("p1").onclick=()=>{$("fake").checked=true;$("loss").value=0;$("jit").value=5;$("lat").value=30;verdict();};
+$("p2").onclick=()=>{$("fake").checked=false;$("loss").value=15;$("jit").value=110;$("lat").value=250;verdict();};
+verdict();
+let sent=0,rec=0,lost=0,dots=[];
+setInterval(()=>{
+  if(!$("t-net").classList.contains("on"))return;
+  const t=$("track"),L=+$("loss").value,J=+$("jit").value,T=+$("lat").value,f=$("fake").checked;
+  const d=document.createElement("div");d.className="dot"+(f?" fake":"");t.appendChild(d);
+  dots.push({d,x:0,v:2.2*(1-T/700)+(Math.random()-.5)*J/60,drop:Math.random()*100<L,at:30+Math.random()*40});sent++;},120);
+(function tick(){
+  const w=$("track").clientWidth;
+  dots=dots.filter(p=>{p.x+=Math.max(.6,p.v);p.d.style.left=p.x/100*w+"px";
+    if(p.drop&&p.x>p.at&&!p.dead){p.dead=1;p.d.classList.add("lost");lost++;}
+    if(p.dead&&p.x>p.at+8){p.d.remove();return false;}
+    if(p.x>=100){p.d.remove();if(!p.drop)rec++;return false;}return true;});
+  $("ms").textContent=sent;$("mr").textContent=rec;$("ml").textContent=(sent>20?Math.round(100*lost/Math.max(1,sent)):0)+"%";
+  requestAnimationFrame(tick);})();
+/* 2 fraud replay */
+const log=$("log");let busy=false;
+const add=(t,c)=>{const e=document.createElement("div");e.textContent=t;if(c)e.className=c;log.appendChild(e);};
+const inr=n=>n>=1e7?"₹"+(n/1e7).toFixed(2)+" crore":"₹"+(n/1e5).toFixed(1)+" lakh";
+$("clr").onclick=()=>{if(busy)return;log.innerHTML="";$("loss2").textContent="₹0";$("usd").textContent="";};
+$("run").onclick=async()=>{
+  if(busy)return;busy=true;log.innerHTML="";$("loss2").textContent="₹0";$("usd").textContent="";
+  const w=ms=>new Promise(r=>setTimeout(r,ms));
+  const C=[1,2,3,4].map(i=>$("c"+i).checked),arup=$("sc").value=="arup",rate=+$("rate").value||86;
+  const total=arup?25.6e6*rate:25e7,per=total/15;
+  if(!arup)add("Hypothetical scenario, not a real case.");
+  add(arup?"1. Email asks for a confidential transaction. Employee suspects phishing.":"1. A Mumbai finance executive gets an email from the ‘MD’ about a confidential RTGS payment.");await w(700);
+  add(arup?"2. Employee joins a video call with the apparent CFO and colleagues.":"2. A video call follows with the ‘MD’ and ‘CFO’.");await w(700);
+  add("3. Every other participant is a deepfake. Network metrics look normal.","bad");await w(800);
+  let n=0,blocked="";
+  if(C[0])blocked="Out-of-band call-back: the real executive denies the request.";
+  else if(C[3])blocked="Policy: video alone is not enough. No verified identity, request rejected.";
+  else if(C[1])blocked="Dual authorization: the second approver was not on the call and refuses.";
+  if(blocked)add("4. "+blocked,"ok");
+  else for(let i=1;i<=15;i++){
+    if(C[2]&&per>5e6){add("4. Transfer "+i+" of "+inr(per)+" exceeds the ₹50 lakh limit. Blocked, escalated.","ok");break;}
+    n=i;add("4. Transfer "+i+" sent ("+inr(per)+").","bad");$("loss2").textContent=inr(i*per);await w(180);}
+  await w(300);
+  $("loss2").textContent=n?inr(n*per):"₹0";
+  $("usd").textContent=n?(arup?"Arup actual: HK$200 million, about US$25.6 million (CNN), shown at ₹"+rate+" per US$.":"Hypothetical total of ₹25 crore in 15 transfers."):"Attack stopped. No funds lost.";
+  add(n?"Result: the chain was never broken.":"Result: one process control broke the chain. No network change was needed.",n?"bad":"ok");
+  busy=false;};
+/* 3 layers */
+const LY=[
+["Application (OSI 5-7)","Video calls, messaging, media sharing: where fakes are seen and trusted.","Phishing-resistant MFA, content provenance, call-back policy.","“Encryption stops deepfakes.” No. It protects the channel, not the content."],
+["Transport (OSI 4)","TCP/UDP. RTP over UDP carries the media stream unchanged.","TLS/DTLS, QoS telemetry (not proof of fakery).","“Packet loss means the video is fake.” No. Compression and rendering cause glitches too."],
+["Internet (OSI 3)","IP addressing and routing deliver packets without judging content.","Filtering, reputation, segmentation, zero-trust access.","“The router can detect a deepfake.” No. It forwards packets without understanding them."],
+["Link + Physical (OSI 1-2)","NICs, Wi-Fi, Ethernet, fibre: transmission only. Interception is a separate threat.","WPA3, 802.1X, MACsec, physical security.","“A deepfake is a Wi-Fi attack.” No. A rogue access point is a different attack."]];
+LY.forEach((l,i)=>{const b=document.createElement("button");b.className="layer";b.style.cssText="display:block;width:100%;margin:6px 0;border:1px solid var(--ink);background:var(--bg);color:var(--ink);padding:12px;font:inherit;font-weight:700;text-align:left;cursor:pointer";b.textContent=l[0];b.onclick=()=>pick(i);$("lbtn").appendChild(b);});
+function pick(i){[...$("lbtn").children].forEach((b,j)=>{b.style.background=i==j?"var(--sage)":"var(--bg)";b.style.color=i==j?"#202C3A":"var(--ink)";});
+  const l=LY[i];$("linfo").innerHTML="<h3>Where deepfakes interact</h3>"+l[1]+"<h3>Typical defenses</h3>"+l[2]+"<h3>Common myth</h3>"+l[3]+"<p class='v'>A deepfake rides normal protocols. It abuses trust at the application layer, not flaws in TCP/IP.</p>";}
+pick(0);
+/* 4 provenance */
+const enc=new TextEncoder();let KP=null,SIG=null;
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function doSign(text){
+  if(!window.crypto||!crypto.subtle){$("sigout").innerHTML="<div class='res bad'>Web Crypto needs https or localhost. Open the deployed site.</div>";return false;}
+  KP=await crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]);
+  SIG=await crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},KP.privateKey,enc.encode(text));
+  const h=await crypto.subtle.digest("SHA-256",enc.encode(text));
+  $("sigout").innerHTML="<div class='m'><div>SHA-256 of content<code>"+hex(h).slice(0,32)+"…</code></div><div>Signature (ECDSA P-256)<code>"+hex(SIG).slice(0,32)+"…</code></div></div>";return true;}
+$("sign").onclick=async()=>{if(await doSign($("cap").value)){$("recv").value=$("cap").value;$("vres").innerHTML="";}};
+$("lie").onclick=async()=>{const lie="CFO approves transfer of Rs 9 crore to attacker account.";if(await doSign(lie)){$("recv").value=lie;$("verify").click();}};
+$("verify").onclick=async()=>{
+  if(!SIG){$("vres").innerHTML="<div class='res bad'>Sign something first.</div>";return;}
+  const ok=await crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},KP.publicKey,SIG,enc.encode($("recv").value));
+  const same=$("recv").value==$("cap").value;
+  $("vres").innerHTML=ok?"<div class='res'>Signature VALID: this exact content was signed by this key."+(same?"":" (But the content is different from your original caption: a valid signature proves the key, not that the statement is true.)")+"</div>":"<div class='res bad'>Signature INVALID: the content was altered after signing.</div>";};
+/* 5 zero trust */
+function zt(){
+  const [net,id,dev,pv,hi]=["z1","z2","z3","z4","z5"].map(i=>$(i).checked);
+  let d,r;
+  if(!id){d="DENY";r="Identity not verified with phishing-resistant MFA. Being inside the network earns no trust.";}
+  else if(!dev){d="DENY";r="Device is not attested. Identity alone is not enough.";}
+  else if(hi&&!pv){d="STEP-UP";r="High-risk action without valid provenance: require out-of-band verification and dual approval. Missing provenance means unknown, not fake.";}
+  else{d="ALLOW";r=hi?"Identity, device and provenance all check out. Per-request access to a micro-segmented resource, still subject to transaction limits.":"Identity and device verified. Least-privilege access granted for this request.";}
+  $("zd").textContent=d;$("zr").textContent=r+(net?" (Network location ignored.)":" (Network location ignored too.)");}
+["z1","z2","z3","z4","z5"].forEach(i=>$(i).addEventListener("input",zt));zt();
+</script></body></html>
